@@ -8,6 +8,11 @@ const circles = Array.from(document.querySelectorAll('.circle'));
 const leftBtn = document.querySelector('.left-btn');
 const rightBtn = document.querySelector('.right-btn');
 const grapes = document.querySelector('.grapes-img');
+const menuIcon = document.querySelector('.menu');
+const sectionOneWrapper = document.querySelector('.section-1-wrapper');
+const sectionFiveWrapper = document.querySelector('.section-5-wrapper');
+
+sectionOneWrapper.style.transform = 'scale(1)';
 
 const progressCounter = () => {
   progress.textContent = `${counterEnd}/${sections.length}`;
@@ -27,6 +32,8 @@ const pageController = () => {
     });
     counterStart = 0;
     counterEnd = 1;
+    sectionOneWrapper.style.transform = 'scale(1)';
+    sectionFiveWrapper.style.transform = 'scale(1.5)';
     progressCounter();
     bool = false;
   }
@@ -40,6 +47,8 @@ const pageController = () => {
     });
     counterStart = 4;
     counterEnd = 5;
+    sectionOneWrapper.style.transform = 'scale(1.5)';
+    sectionFiveWrapper.style.transform = 'scale(1)';
     progressCounter();
     bool = false;
   }
@@ -60,10 +69,24 @@ window.addEventListener('wheel', (e) => {
   pageController();
   progressCounter();
 
-  bool &&
-    (document.querySelector(
+  if (bool) {
+    document.querySelector(
       `.section-${deltaY ? counterStart : counterEnd}`
-    ).style.left = `${deltaY ? '-100vw' : '0'}`);
+    ).style.left = `${deltaY ? '-100vw' : '0'}`;
+
+    document.querySelector(
+      `.section-${deltaY ? counterStart : counterEnd}-wrapper`
+    ).style.transform = `scale(${deltaY ? '1.5' : '1'})`;
+
+    document.querySelector(
+      `.section-${deltaY ? counterStart + 1 : counterEnd + 1}-wrapper`
+    ).style.transform = `scale(${deltaY ? '1' : '1.5'})`;
+  }
+
+  // bool &&
+  //   (document.querySelector(
+  //     `.section-${deltaY ? counterStart : counterEnd}`
+  //   ).style.left = `${deltaY ? '-100vw' : '0'}`);
 });
 
 leftBtn.addEventListener('click', () => {
@@ -72,6 +95,14 @@ leftBtn.addEventListener('click', () => {
 
   pageController() &&
     (document.querySelector(`.section-${counterEnd}`).style.left = '0');
+
+  if (bool) {
+    document.querySelector(`.section-${counterEnd}-wrapper`).style.transform =
+      'scale(1)';
+    document.querySelector(
+      `.section-${counterEnd + 1}-wrapper`
+    ).style.transform = 'scale(1.5)';
+  }
 });
 
 rightBtn.addEventListener('click', () => {
@@ -80,6 +111,13 @@ rightBtn.addEventListener('click', () => {
 
   pageController() &&
     (document.querySelector(`.section-${counterStart}`).style.left = '-100vw');
+
+  if (bool) {
+    document.querySelector(`.section-${counterEnd}-wrapper`).style.transform =
+      'scale(1)';
+    document.querySelector(`.section-${counterStart}-wrapper`).style.transform =
+      'scale(1.5)';
+  }
 });
 
 grapes.addEventListener('mouseover', () => {
@@ -88,4 +126,8 @@ grapes.addEventListener('mouseover', () => {
 
 grapes.addEventListener('mouseout', () => {
   document.querySelector('.section-3-wrapper').style.opacity = '1';
+});
+
+menuIcon.addEventListener('click', () => {
+  document.querySelector('.navbar').classList.toggle('change');
 });
